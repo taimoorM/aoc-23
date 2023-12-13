@@ -1,7 +1,6 @@
 const fs = require("fs");
 
 async function getSumOfCalibrationValues() {
-  let text;
   fs.readFile("./input.txt", "utf8", (err, text) => {
     if (err) throw err;
     const textArray = text.split("\n");
