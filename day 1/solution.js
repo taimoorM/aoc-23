@@ -6,12 +6,16 @@ async function getSumOfCalibrationValues() {
     const textArray = text.split("\n");
 
     const sum = textArray.reduce((acc, curr) => {
+      let values = [];
       for (let c of curr) {
-        //check if it's a number
         if (!isNaN(c)) {
-          acc += parseInt(c);
+          values.push(c);
         }
       }
+
+      const value = values.join("");
+      if (value === "") return acc;
+      acc += parseInt(value);
       return acc;
     }, 0);
 
