@@ -3,24 +3,20 @@ const fs = require("fs");
 async function getSumOfCalibrationValues() {
   fs.readFile("./input.txt", "utf8", (err, text) => {
     if (err) throw err;
-    const textArray = text.split("\n");
+    let acc = 0;
+    let values = [];
 
-    const sum = textArray.reduce((acc, curr) => {
-      let values = [];
-      for (let c of curr) {
-        if (!isNaN(c)) {
-          values.push(c);
-        }
+    for (let c of text) {
+      if (c === "\n") {
+        console.log(values);
+        acc += parseInt([values[0], values[values.length - 1]].join(""));
+        values = [];
+      } else if (!isNaN(Number(c))) {
+        values.push(c);
       }
+    }
 
-      const value = values.join("");
-      if (value === "") return acc;
-      acc += parseInt(value);
-      return acc;
-    }, 0);
-
-    console.log(sum);
-
+    console.log(acc);
     console.log(new Date());
   });
 }
