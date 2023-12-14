@@ -25,15 +25,22 @@ async function getSumOfCalibrationValues() {
       if (c === "\n") {
         const matches = line.match(regex);
 
-        const values = [
-          isNaN(matches[0]) ? numbers.get(matches[0]) : matches[0],
-          isNaN(matches[matches.length - 1])
-            ? numbers.get(matches[matches.length - 1])
-            : matches[matches.length - 1],
-        ];
+        if (matches.length === 1) {
+          console.log(matches[0]);
+          acc += parseInt(matches[0]);
 
-        line = "";
-        acc += parseInt(values.join(""));
+          line = "";
+        } else {
+          const values = [
+            isNaN(matches[0]) ? numbers.get(matches[0]) : matches[0],
+            isNaN(matches[matches.length - 1])
+              ? numbers.get(matches[matches.length - 1])
+              : matches[matches.length - 1],
+          ];
+
+          acc += parseInt(values.join(""));
+          line = "";
+        }
       } else {
         line += c;
       }
