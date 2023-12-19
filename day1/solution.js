@@ -20,8 +20,8 @@ async function partOne() {
     console.log(new Date());
   });
 }
-console.log(new Date());
-partOne();
+// console.log(new Date());
+// partOne();
 
 const numbers = new Map([
   ["one", "1"],
@@ -35,43 +35,71 @@ const numbers = new Map([
   ["nine", "9"],
 ]);
 
-const regex = /[1-9]|(one|two|three|four|five|six|seven|eight|nine)/g;
-
 async function partTwo() {
   fs.readFile("./input.txt", "utf8", (err, text) => {
     if (err) throw err;
     let acc = 0;
 
-    let line = "";
+    const lines = text.split(/\r?\n/);
+    console.log(lines);
 
-    for (let c of text) {
-      if (c === "\n") {
-        const matches = line.match(regex);
+    for (let line of lines) {
+      let firstValue;
+      let secondValue;
 
-        if (matches.length === 1) {
-          const value = matches[0] + matches[0];
-          console.log(value);
-          acc += parseInt(value);
+      console.log(line);
 
-          line = "";
+      // search for first value going from left to right and go to next loop if value found
+      for (let i = 0; i < line.length; i++) {
+        let found = false;
+        if (!isNaN(line[i])) {
+          firstValue = line[i];
+
+          break;
         } else {
-          const values = [
-            isNaN(matches[0]) ? numbers.get(matches[0]) : matches[0],
-            isNaN(matches[matches.length - 1])
-              ? numbers.get(matches[matches.length - 1])
-              : matches[matches.length - 1],
-          ];
+          for (let key of numbers.keys()) {
+            //if first letter of key is equal to current letter in line
+            // then check if the remaining letters of the key are equal to the next letters in the line upto the length of the key
 
-          acc += parseInt(values.join(""));
-          line = "";
+            if (key[0] === line[i] && key === line.slice(i, i + key.length)) {
+              firstValue = numbers.get(key);
+              found = true;
+              break;
+            }
+          }
+
+          if (found) {
+            break;
+          }
         }
-      } else {
-        line += c;
       }
+
+      // search for second value going from right to left and go to next line if value found
+      for (let i = line.length - 1; i >= 0; i--) {
+        let found = false;
+        if (!isNaN(line[i])) {
+          secondValue = line[i];
+
+          break;
+        } else {
+          for (let key of numbers.keys()) {
+            if (key[0] === line[i] && key === line.slice(i, i + key.length)) {
+              secondValue = numbers.get(key);
+              found = true;
+              break;
+            }
+          }
+          if (found) {
+            break;
+          }
+        }
+      }
+      const value = [firstValue, secondValue].join("");
+      console.log(value);
+      acc += parseInt(value);
     }
 
     console.log(acc);
-    console.log(new Date());
   });
 }
 console.log(new Date());
